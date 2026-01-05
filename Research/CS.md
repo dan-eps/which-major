@@ -1,0 +1,9 @@
+# Computer Science
+The College of Computing & Informatics' Bachelor of Science/Arts in Computer Science offers extensive exposure and hands-on practice in the core areas of the field, including programming paradigms and languages, algorithms, systems, networking, and software engineering. Students also focus their upper-level studies with specializations in areas such as artificial intelligence and machine learning, security, graphics and vision, and game programming/development. The program's flexibility allows students to easily sample from areas in which they would like to apply their computing knowledge. This hands-on curriculum combined with co-op provides real-world experience that culminates in a full-year team capstone project involving in-depth study and application of computing and informatics.
+
+The programs of study in computer science are designed with the versatility to prepare students for careers in a rapidly changing profession and to allow strong preparation for graduate education in the field. In addition to the courses in the major, the programs emphasize foundation courses in the sciences and in applied mathematics. The programs also provide sufficient flexibility with electives to permit a student to pursue a minor in a technical or non-technical field. Computer Science graduates are in demand in any discipline where computing expertise is needed, from the computing industry to science and technical applications to the arts.
+
+| Subject | Rating | Courses |
+| ------- | ------ | ------- |
+| Math | ★★★★★ | Calc 1, 2 & 3, Linear Algebra, Discrete Math, Statistics |
+| Science | ★★★☆☆ | Bio, Chem, or Physics |

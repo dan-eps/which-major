@@ -1,1 +1,7 @@
+# Artificial Intelligence & Machine Learning
 The College of Computing & Informatics' Bachelor of Science in Artificial Intelligence & Machine Learning (AIML) provides a strong foundation in these areas, combining conceptual and theoretical knowledge with hands-on practice and applications. The program is designed for maximum flexibility, allowing students to tailor their study of AI and machine learning along specific focus areas (e.g., theory, data analytics, hardware, and/or practical applications). Through coursework and possibly double majors, students can also blend their study with a wide variety of other fields, including computing, physical or social sciences, engineering, and arts and humanities. The hands-on curriculum combined with co-op provides real-world experience that culminates in a full-year team capstone project involving in-depth study and application of computing and informatics. Graduates of the BS AIML program are in high demand in a vast array of industries where knowledge of AI and machine learning is critical for success.
+
+| Subject | Rating | Courses |
+| ------- | ------ | ------- |
+| Math | ★★★★☆ | Calc 1, 2 & 3, Linear Algebra, Statistics |
+| Science | ★★☆☆☆ | Any |
