@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Which CoEC Major? </title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
+            body {
+                background-color: #07294D;
+            }
+            main {
+                color: white;
+                font-family: "Google Sans Flex", sans-serif;
+                display: flex;
+                flex-wrap: wrap;
+                width: 80%;
+                padding: 20px 10%;
+                justify-content: center;
+                align-items: center;
+                justify-self: center;
+                gap: 10px;
+            }
+            h1 {
+                width: 100%;
+                text-align: center;
+                font-size: 42px;
+                text-decoration: underline;
+            }
+            #q{
+                font-size: 36px;
+            }
+            .answer{
+                font-size: 18px;
+                padding: 10px;
+                border: 2px solid white;
+                border-radius: 10px;
+                margin: 10px 0px;
+            }
+            .answer:hover{
+                transform: scale(1.05);
+            }
+            .rank {
+                font-size: x-large;
+                margin: 20px 0px;
+            }
+            .rank h2, .rank h3 {
+                margin-bottom: 0px;
+            }
+            .qualify {
+                font-size: 24px;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <h1>Which Major at CoEC is right for you?</h1>
+            <div id="quiz">
+                <h3 id="q"></h3>
+                <div id="a1" class="answer"></div>
+                <div id="a2" class="answer"></div>
+                <div id="a3" class="answer"></div>
+                <div id="a4" class="answer"></div>
+            </div>
+            <div id="major" style="display: none">
+                <div class="qualify"> Your best fit: </div>
+                <div class="rank" id="best">
+                </div>
+                <br/><hr/><br/><br/>
+                <div class="qualify"> You were also a match with: </div>
+                <div class="rank" id="second">
+                </div>
+                <div class="rank" id="third">
+                </div>
+            </div>
+        </main>
+        <script src="metrics.js"></script>
+        <script src="questions.js"></script>
+        <script>
+
+            const personalMetrics = {
+                MATH: 0.5,
+                PROGRAMMING: 0.5,
+                CREATIVITY: 0.5,
+                THEORY: 0.5,
+                SYSTEM: 0.5,
+                SCIENCE: 0.5,
+                LAB: 0.5,
+            }
+
+            function populateQuestion(num){
+                if(num >= questions.length){
+                    findBestMajor();
+                    return;
+                }
+
+                q = questions[num]
+                document.getElementById("q").innerHTML = num + 1 + ". " + q.QUESTION
+                a = 1
+                q.ANSWERS.forEach(answer => {
+                    document.getElementById("a"+a).textContent = answer.TEXT;
+                    document.getElementById("a"+a).setAttribute("data-effect", answer.EFFECT)
+                    a++;
+                });
+            }
+
+            let question_index = 0;
+            populateQuestion(question_index);
+
+            const answers = document.querySelectorAll('.answer');
+            answers.forEach(answer => {
+                answer.addEventListener("click", (event)=>{
+                    let effect = event.target.attributes["data-effect"].value.split(',')
+                    let m = 0, e = 1;
+                    while (m < effect.length){
+                        console.log(effect[m])
+                        console.log(personalMetrics[effect[m]])
+                        personalMetrics[effect[m]] += parseFloat(effect[e]);
+                        m += 2;
+                        e += 2;
+                    }
+                    console.log(personalMetrics)
+
+                    question_index += 1;
+                    populateQuestion(question_index);
+                })
+            });
+
+            function normalizeVector(obj) {
+                const values = Object.values(obj)
+                const magnitude = Math.sqrt(values.reduce((s, v) => s + v * v, 0))
+                return Object.fromEntries(
+                    Object.entries(obj).map(([k, v]) => [k, v / magnitude])
+                )
+            }
+
+            function cosineSimilarity(a, b) {
+                let dot = 0
+                let magA = 0
+                let magB = 0
+
+                for (const key in a) {
+                    if (key == "SCHOOL" || key == "DESC"){
+                        continue;
+                    }
+                    dot += a[key] * b[key]
+                    magA += a[key] * a[key]
+                    magB += b[key] * b[key]
+                }
+
+                return dot / (Math.sqrt(magA) * Math.sqrt(magB))
+            }
+
+            function findBestMajor(){
+                const results = Object.entries(majors)
+                .map(([major, profile]) => ({
+                    major,
+                    profile,
+                    similarity: cosineSimilarity(personalMetrics, profile)
+                }))
+                .sort((a, b) => b.similarity - a.similarity)
+                document.getElementById("best").innerHTML = "<h2>" + results[0].major + "</h3><i>" + results[0].profile.SCHOOL + "</i><br/><br/><div>" + results[0].profile.DESC + "</div>"
+                document.getElementById("second").innerHTML = "<h3>" + results[1].major + "</h3><i>" + results[1].profile.SCHOOL + "</i>"
+                document.getElementById("third").innerHTML = "<h3>" + results[2].major + "</h3><i>" + results[2].profile.SCHOOL + "</i>"
+                document.getElementById("quiz").style.display = "none";
+                document.getElementById("major").style.display = "block";
+            }
+
+
+        </script>
+    </body>
+</html>
