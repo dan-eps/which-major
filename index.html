@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title> Which CoEC Major? </title>
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
             body {
                 background-color: #07294D;
+
+                -webkit-user-select: none; /* Safari */
+                -ms-user-select: none; /* IE 10 and IE 11 */
+                user-select: none; /* Standard syntax */
             }
             main {
                 color: white;
@@ -20,13 +25,13 @@
                 gap: 10px;
             }
             h1 {
-                width: 100%;
-                text-align: center;
                 font-size: 42px;
-                text-decoration: underline;
+                width: 100%;
+                margin-bottom: 5px;
             }
             #q{
-                font-size: 36px;
+                font-size: 24px;
+                margin: 0px;
             }
             .answer{
                 font-size: 18px;
@@ -35,24 +40,135 @@
                 border-radius: 10px;
                 margin: 10px 0px;
             }
-            .answer:hover{
-                transform: scale(1.05);
-            }
             .rank {
-                font-size: x-large;
                 margin: 20px 0px;
             }
             .rank h2, .rank h3 {
                 margin-bottom: 0px;
             }
+            .rank h2 {
+                font-size: 38px;
+            }
+            .rank h3 {
+                font-size: 28px;
+            }
+            .rank i {
+                font-size: 18px;
+            }
             .qualify {
                 font-size: 24px;
+                padding-top: 10px;
+            }
+            #best {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 20px 15px;
+                text-align: center;
+                background-color: white;
+                color: #07294D;
+                border-radius: 5px;
+            }
+            #best h2 {
+                margin-top: 0px;
+            }
+            .learn-more {
+                color: white;
+            }
+            #best a {
+                border: 2px solid #07294D;
+                padding: 10px;
+                border-radius: 20px;
+                text-decoration: none;
+                color: #07294D;
+                margin-top: 15px;
+            }
+            #progress-bar{
+                width: 100%;
+                background-color: #333333;
+                height: 20px;
+                border-radius: 10px;
+                margin-bottom: 15px;
+            }
+            #progress{
+                height: 20px;
+                border-radius: 10px;
+                background-color: #006699;
+                transition: 400ms;
+            }
+
+            #quiz{
+                transition: opacity 180ms ease, transform 180ms ease;
+            }
+
+            #quiz.out {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            #quiz.in {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            @keyframes fadeInUp {
+                from {
+                    transform: translate3d(0,40px,0)
+                }
+
+                to {
+                    transform: translate3d(0,0,0);
+                    opacity: 1
+                }
+            }
+
+            @-webkit-keyframes fadeInUp {
+                from {
+                    transform: translate3d(0,40px,0)
+                }
+
+                to {
+                    transform: translate3d(0,0,0);
+                    opacity: 1
+                }
+            }
+
+            .animated {
+                animation-duration: 1s;
+                animation-fill-mode: both;
+                -webkit-animation-duration: 1s;
+                -webkit-animation-fill-mode: both
+            }
+
+            .animatedFadeInUp {
+                opacity: 0
+            }
+
+            .fadeInUp {
+                opacity: 0;
+                animation-name: fadeInUp;
+                -webkit-animation-name: fadeInUp;
+            }
+            @media(min-width: 968px){
+                h1 {
+                    text-decoration: underline;
+                    text-align: center;
+                }
+                #q{
+                    font-size: 36px;
+                }
+                .answer:hover{
+                    transform: scale(1.05);
+                }
             }
         </style>
     </head>
     <body>
         <main>
             <h1>Which Major at CoEC is right for you?</h1>
+            <div id="progress-bar">
+                <div id="progress"></div>
+            </div>
             <div id="quiz">
                 <h3 id="q"></h3>
                 <div id="a1" class="answer"></div>
@@ -60,12 +176,11 @@
                 <div id="a3" class="answer"></div>
                 <div id="a4" class="answer"></div>
             </div>
-            <div id="major" style="display: none">
-                <div class="qualify"> Your best fit: </div>
+            <div id="major" style="display: none" class="animated animatedFadeInUp fadeInUp">
+                <div class="qualify" id="exp"> </div>
                 <div class="rank" id="best">
                 </div>
-                <br/><hr/><br/><br/>
-                <div class="qualify"> You were also a match with: </div>
+                <div class="qualify"> You should also consider: </div>
                 <div class="rank" id="second">
                 </div>
                 <div class="rank" id="third">
@@ -92,14 +207,42 @@
                     return;
                 }
 
-                q = questions[num]
-                document.getElementById("q").innerHTML = num + 1 + ". " + q.QUESTION
-                a = 1
-                q.ANSWERS.forEach(answer => {
-                    document.getElementById("a"+a).textContent = answer.TEXT;
-                    document.getElementById("a"+a).setAttribute("data-effect", answer.EFFECT)
-                    a++;
-                });
+                document.getElementById("progress").style.width = ((num + 1) / questions.length * 100) + "%"
+
+                let question = document.getElementById("quiz")
+
+                if(num == 0){
+                    q = questions[num]
+                    document.getElementById("q").innerHTML = num + 1 + ". " + q.QUESTION
+                    a = 1
+                    q.ANSWERS.forEach(answer => {
+                        document.getElementById("a"+a).textContent = answer.TEXT;
+                        document.getElementById("a"+a).setAttribute("data-effect", answer.EFFECT)
+                        a++;
+                    });
+                }
+                else {
+                    question.classList.add("out");
+                    setTimeout(() => {
+                        // swap content while invisible
+                        q = questions[num]
+                        document.getElementById("q").innerHTML = num + 1 + ". " + q.QUESTION
+                        a = 1
+                        q.ANSWERS.forEach(answer => {
+                            document.getElementById("a"+a).textContent = answer.TEXT;
+                            document.getElementById("a"+a).setAttribute("data-effect", answer.EFFECT)
+                            a++;
+                        });
+
+                        question.classList.remove("out");
+                        question.classList.add("in");
+
+                        // force reflow so "in" applies
+                        question.offsetHeight;
+
+                        question.classList.remove("in");
+                    }, 180); // match CSS duration
+                }
             }
 
             let question_index = 0;
@@ -138,7 +281,7 @@
                 let magB = 0
 
                 for (const key in a) {
-                    if (key == "SCHOOL" || key == "DESC"){
+                    if (key == "SCHOOL" || key == "DESC" || key == "EXP"){
                         continue;
                     }
                     dot += a[key] * b[key]
@@ -157,9 +300,12 @@
                     similarity: cosineSimilarity(personalMetrics, profile)
                 }))
                 .sort((a, b) => b.similarity - a.similarity)
-                document.getElementById("best").innerHTML = "<h2>" + results[0].major + "</h3><i>" + results[0].profile.SCHOOL + "</i><br/><br/><div>" + results[0].profile.DESC + "</div>"
-                document.getElementById("second").innerHTML = "<h3>" + results[1].major + "</h3><i>" + results[1].profile.SCHOOL + "</i>"
-                document.getElementById("third").innerHTML = "<h3>" + results[2].major + "</h3><i>" + results[2].profile.SCHOOL + "</i>"
+                document.getElementById("exp").innerHTML = results[0].profile.EXP + " Based on this, you might be a great fit for: "
+                document.getElementById("best").innerHTML = "<h2>" + results[0].major + "</h2><i>" + results[0].profile.SCHOOL + "</i><br/><br/><div>" + results[0].profile.DESC + "</div><br/><a href='"+results[0].profile.LINK+"' class='learn-more'>Learn More</a>"
+                document.getElementById("second").innerHTML = "<h3>" + results[1].major + "</h3><i>" + results[1].profile.SCHOOL + "</i><br/><br/><div>" + results[1].profile.DESC + "</div><br/><a href='"+results[1].profile.LINK+"' class='learn-more'>Learn More</a>"
+                document.getElementById("third").innerHTML = "<h3>" + results[2].major + "</h3><i>" + results[2].profile.SCHOOL + "</i><br/><br/><div>" + results[2].profile.DESC + "</div><br/><a href='"+results[2].profile.LINK+"' class='learn-more'>Learn More</a>"
+                document.getElementById("progress-bar").style.display = "none";
+                document.getElementById("progress").style.display = "none";
                 document.getElementById("quiz").style.display = "none";
                 document.getElementById("major").style.display = "block";
             }
